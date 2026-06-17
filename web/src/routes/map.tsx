@@ -148,6 +148,7 @@ export default function LiveMap() {
     });
 
     setWsClient(client);
+    client.connect();
 
     const updateViewport = () => {
       if (mapInstance && client.isConnected()) {

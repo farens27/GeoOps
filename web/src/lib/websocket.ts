@@ -164,9 +164,10 @@ export class WebSocketClient {
         parsedUrl.searchParams.set("token", token);
       }
       
+      console.log("[GeoOps WS] Attempting to connect to:", parsedUrl.toString());
       this.ws = new WebSocket(parsedUrl.toString());
     } catch (e) {
-      console.error("Invalid WebSocket URL:", this.url);
+      console.error("[GeoOps WS] Invalid WebSocket URL:", this.url);
       return;
     }
     this.ws.addEventListener("open", this.handleOpen);
