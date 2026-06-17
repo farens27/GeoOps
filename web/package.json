@@ -1,0 +1,26 @@
+{
+  "name": "geoops-web",
+  "version": "0.1.0",
+  "description": "GeoOps - Real-time field workforce GPS tracking frontend",
+  "type": "module",
+  "scripts": {
+    "dev": "vinxi dev",
+    "build": "vinxi build",
+    "start": "vinxi start"
+  },
+  "dependencies": {
+    "@solidjs/meta": "^0.29.0",
+    "@solidjs/router": "^0.15.0",
+    "@solidjs/start": "^1.1.0",
+    "leaflet": "^1.9.4",
+    "leaflet-draw": "^1.0.4",
+    "solid-js": "^1.9.0",
+    "vinxi": "^0.5.0"
+  },
+  "devDependencies": {
+    "@types/leaflet": "^1.9.0",
+    "@types/leaflet-draw": "^1.0.0",
+    "typescript": "^5.7.0",
+    "vite": "^6.0.0"
+  }
+}
