@@ -45,12 +45,12 @@ export default function Workers() {
     { 
       key: 'status', 
       label: 'Status',
-      render: (val: string) => <StatusBadge status={val as any} />
+      render: (row: any) => <StatusBadge status={row.status} />
     },
     {
       key: 'id',
       label: 'Actions',
-      render: (_: any, row: any) => (
+      render: (row: any) => (
         <div style={{ display: "flex", gap: "0.5rem" }}>
           <button 
             class="btn" 

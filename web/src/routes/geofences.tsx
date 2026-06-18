@@ -43,27 +43,27 @@ export default function Geofences() {
     { 
       key: 'zone_type', 
       label: 'Type',
-      render: (val: string) => <StatusBadge status={val as any} />
+      render: (row: any) => <StatusBadge status={row.zone_type} />
     },
     { 
       key: 'color', 
       label: 'Color',
-      render: (val: string) => (
+      render: (row: any) => (
         <div style={{ display: "flex", "align-items": "center", gap: "0.5rem" }}>
-          <div style={{ width: "16px", height: "16px", "border-radius": "50%", background: val, border: "1px solid rgba(255,255,255,0.2)" }}></div>
-          <span>{val}</span>
+          <div style={{ width: "16px", height: "16px", "border-radius": "50%", background: row.color, border: "1px solid rgba(255,255,255,0.2)" }}></div>
+          <span>{row.color}</span>
         </div>
       )
     },
     { 
       key: 'is_active', 
       label: 'Status',
-      render: (val: boolean) => <StatusBadge status={val ? 'ACTIVE' : 'INACTIVE'} />
+      render: (row: any) => <StatusBadge status={row.is_active ? 'ACTIVE' : 'INACTIVE'} />
     },
     {
       key: 'id',
       label: 'Actions',
-      render: (_: any, row: any) => (
+      render: (row: any) => (
         <div style={{ display: "flex", gap: "0.5rem" }}>
           <button 
             class="btn" 

@@ -296,13 +296,35 @@ export class WebSocketClient {
       if (topic !== "gps:lobby") return;
 
       switch (event) {
-        case "gps_update":
-          this.onGPSUpdate(payload as GPSUpdate);
+        case "gps_update": {
+          const raw = payload as any;
+          const mapped: GPSUpdate = {
+            workerId: raw.worker_id || raw.workerId,
+            name: raw.name || raw.worker_name || raw.workerName || "Unknown",
+            latitude: raw.latitude,
+            longitude: raw.longitude,
+            timestamp: raw.timestamp
+          };
+          this.onGPSUpdate(mapped);
           break;
+        }
 
-        case "alert":
-          this.onAlert(payload as AlertUpdate);
+        case "alert": {
+          const raw = payload as any;
+          const mapped: AlertUpdate = {
+            id: raw.id,
+            workerId: raw.worker_id || raw.workerId,
+            workerName: raw.worker_name || raw.workerName || "Unknown",
+            geofenceId: raw.geofence_id || raw.geofenceId,
+            geofenceName: raw.geofence_name || raw.geofenceName || "Unknown",
+            eventType: raw.event_type || raw.eventType,
+            latitude: raw.latitude,
+            longitude: raw.longitude,
+            detectedAt: raw.detected_at || raw.detectedAt || new Date().toISOString()
+          };
+          this.onAlert(mapped);
           break;
+        }
 
         default:
           break;

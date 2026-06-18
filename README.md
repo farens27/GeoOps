@@ -6,6 +6,32 @@ instant notifications when workers enter, exit, or breach restricted zones.
 
 ---
 
+## Key Features Completed
+
+1. **Interactive GPS Simulator Console**: Real-time worker tracking console with support for:
+   - **Manual Mode**: Direct WASD keyboard inputs and arrow key inputs.
+   - **Virtual Joystick**: Seamless drag-and-move touchscreen controller for mobile and tablet simulation.
+   - **Auto Mode**: Automatic path walking along geofence vertices.
+   - **Adjustable Speeds**: Supports walking, running, driving, and sprinting (up to 25x).
+   - **Auto-centering camera**: Real-time Leaflet view alignment to follow simulated worker tracks.
+2. **Geofencing & Breach Engine**: Zero-latency ETS-based position updates, in-memory geofence caching, and Jordan curve theorem (ray-casting) calculations to register `ENTERED`, `EXITED`, and `BREACH` events.
+3. **Emergency Evacuation Drill System**: Site-wide alarm trigger simulating a fire drill. Integrates:
+   - **Proximity Tracking**: Real-time distance calculations (Haversine formula) to the nearest `SAFETY` assembly area.
+   - **Compliance Monitoring**: Pushes system warning logs every 5 seconds if a worker remains outside the safety area.
+   - **Safe/Accounted State**: Registers the worker as `SAFE` once inside the assembly area, and raises breach warnings if they exit the zone during an active drill.
+4. **WebSocket PubSub Telemetry**: Clean WebSocket synchronization using custom mappers from Elixir `snake_case` payloads to SolidJS `camelCase` interfaces with exponential backoff connection recovery.
+
+---
+
+## Release Notes & Recent Bug Fixes
+
+- **DataTable Renderer Parameter Fixes**: Corrected column parameter signatures across [geofences.tsx](file:///D:/Train/GeoOps/web/src/routes/geofences.tsx), [workers.tsx](file:///D:/Train/GeoOps/web/src/routes/workers.tsx), and [alerts.tsx](file:///D:/Train/GeoOps/web/src/routes/alerts.tsx) to align with the `<DataTable>` API signature `(row, index)`. This resolved the `DELETE /api/geofences/undefined` crash and restored worker/geofence deletions and edits.
+- **Leaflet SVG Draw Priority**: Sorted geofences drawing order dynamically (`WORK_ZONE` first, `RESTRICTED` last). This places smaller, high-risk restricted zones on top of the map layer stack, resolving the issue where tooltips for restricted areas were unreachable.
+- **WebSocket Casing & Typings**: Standardized websocket messaging parsing. Added fallback guards in the browser client `onAlert` callbacks to prevent `TypeError` exceptions from breaking event logs.
+- **Database Schema Execution**: Unified the SQL schema configurations by running PostGIS/Ecto migrations against CockroachDB to create missing schema relations like `geo_events`.
+
+---
+
 ## Tech Stack
 
 | Layer            | Technology                      | Hosting            |

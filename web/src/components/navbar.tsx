@@ -9,7 +9,7 @@
  */
 
 import { createSignal, Show, For, onMount, onCleanup } from "solid-js";
-import { A, useLocation } from "@solidjs/router";
+import { A, useLocation, useNavigate } from "@solidjs/router";
 import type { User } from "~/lib/auth";
 import { logout } from "~/lib/auth";
 
@@ -50,6 +50,7 @@ const NAV_LINKS: NavLink[] = [
 
 export default function Navbar(props: NavbarProps) {
   const location = useLocation();
+  const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = createSignal(false);
 
   /* Close mobile menu when route changes */
@@ -84,8 +85,13 @@ export default function Navbar(props: NavbarProps) {
     return location.pathname.startsWith(path);
   };
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (err) {
+      console.error("Logout request failed", err);
+    }
+    navigate("/login", { replace: true });
   };
 
   return (

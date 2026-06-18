@@ -10,13 +10,17 @@ defmodule GeoopsWeb.Router do
   end
 
   # Public routes (no auth)
+  scope "/", GeoopsWeb do
+    pipe_through :api
+
+    get "/", RootController, :index
+  end
+
   scope "/api", GeoopsWeb do
     pipe_through :api
 
     post "/auth/login", AuthController, :login
     post "/auth/logout", AuthController, :logout
-
-    # WebSocket upgrade handled by endpoint, but list here for clarity
   end
 
   # Protected routes (require valid JWT)

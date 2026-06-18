@@ -61,7 +61,7 @@ defmodule Geoops.Tracking.GpsProcessor do
         previous_zones = WorkerState.get_worker_zones(worker_id)
 
         # --- Step 4: Persist zone-change events immediately ---
-        handle_zone_changes(worker_id, current_zones, previous_zones, lat, lng)
+        handle_zone_changes(worker_id, worker_name, current_zones, previous_zones, lat, lng)
         WorkerState.update_worker_zones(worker_id, current_zones)
 
         # --- Step 5: Broadcast position to WebSocket clients ---
@@ -120,7 +120,7 @@ defmodule Geoops.Tracking.GpsProcessor do
   # Zone-change event handling
   # ------------------------------------------------------------------
 
-  defp handle_zone_changes(worker_id, current_zones, previous_zones, lat, lng) do
+  defp handle_zone_changes(worker_id, worker_name, current_zones, previous_zones, lat, lng) do
     entered = MapSet.difference(current_zones, previous_zones)
     exited = MapSet.difference(previous_zones, current_zones)
 
@@ -149,7 +149,10 @@ defmodule Geoops.Tracking.GpsProcessor do
              longitude: lng
            }) do
         {:ok, event} ->
-          broadcast_alert(event, geofence)
+          Logger.info(
+            "GpsProcessor: Worker '#{worker_name}' (ID: #{worker_id}) triggered #{event_type} on geofence '#{geofence && geofence.name}' (ID: #{zone_id}) at [#{lat}, #{lng}]"
+          )
+          broadcast_alert(event, geofence, worker_name)
 
         {:error, reason} ->
           Logger.warning(
@@ -170,7 +173,10 @@ defmodule Geoops.Tracking.GpsProcessor do
              longitude: lng
            }) do
         {:ok, event} ->
-          broadcast_alert(event, geofence)
+          Logger.info(
+            "GpsProcessor: Worker '#{worker_name}' (ID: #{worker_id}) triggered EXITED on geofence '#{geofence && geofence.name}' (ID: #{zone_id}) at [#{lat}, #{lng}]"
+          )
+          broadcast_alert(event, geofence, worker_name)
 
         {:error, reason} ->
           Logger.warning(
@@ -180,7 +186,7 @@ defmodule Geoops.Tracking.GpsProcessor do
     end)
   end
 
-  defp broadcast_alert(event, geofence) do
+  defp broadcast_alert(event, geofence, worker_name) do
     Phoenix.PubSub.broadcast(
       Geoops.PubSub,
       "gps:alerts",
@@ -188,6 +194,7 @@ defmodule Geoops.Tracking.GpsProcessor do
        %{
          id: event.id,
          worker_id: event.worker_id,
+         worker_name: worker_name,
          geofence_id: event.geofence_id,
          geofence_name: geofence && geofence.name,
          event_type: event.event_type,

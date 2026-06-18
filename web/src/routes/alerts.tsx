@@ -48,28 +48,29 @@ export default function Alerts() {
     {
       key: 'detected_at',
       label: 'Detected At',
-      render: (val: string, row: any) => {
-        const d = new Date(val || row.detectedAt);
+      render: (row: any) => {
+        const val = row.detected_at || row.detectedAt;
+        const d = new Date(val);
         return isNaN(d.getTime()) ? '-' : d.toLocaleString();
       }
     },
     { 
       key: 'worker_name', 
       label: 'Worker',
-      render: (val: string, row: any) => val || row.workerName
+      render: (row: any) => row.worker_name || row.workerName
     },
     { 
       key: 'event_type', 
       label: 'Event',
-      render: (val: string, row: any) => {
-        const status = val || row.eventType;
-        return <StatusBadge status={status as any} />;
+      render: (row: any) => {
+        const val = row.event_type || row.eventType;
+        return <StatusBadge status={val as any} />;
       }
     },
     { 
       key: 'geofence_name', 
       label: 'Geofence',
-      render: (val: string, row: any) => val || row.geofenceName
+      render: (row: any) => row.geofence_name || row.geofenceName
     }
   ];
 
